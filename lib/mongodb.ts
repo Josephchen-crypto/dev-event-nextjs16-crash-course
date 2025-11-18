@@ -13,8 +13,6 @@ interface ConnectionCache {
  * 定义连接数据库时的配置参数
  */
 interface ConnectionOptions {
-  useNewUrlParser?: boolean;       // 使用新的URL解析器（推荐）
-  useUnifiedTopology?: boolean;  // 使用新的拓扑引擎（推荐）
   maxPoolSize?: number;         // 连接池最大连接数
   minPoolSize?: number;         // 连接池最小连接数
   maxIdleTimeMS?: number;       // 连接在池中的最大空闲时间（毫秒）
@@ -74,8 +72,6 @@ class MongoConnectionManager {
     try {
       // 默认连接配置
       const defaultOptions: ConnectionOptions = {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
         maxPoolSize: 10,
         minPoolSize: 0,
         maxIdleTimeMS: 30000,
@@ -220,8 +216,6 @@ const mongoConnectionManager = MongoConnectionManager.getInstance();
  * 适用于大多数应用场景的优化配置
  */
 const defaultConnectionOptions: ConnectionOptions = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
   maxPoolSize: 10,
   minPoolSize: 0,
   maxIdleTimeMS: 30000,
@@ -281,7 +275,8 @@ export const disconnectDatabase = async (): Promise<void> => {
 };
 
 // 导出连接管理器实例，供高级用法
-export { mongoConnectionManager, ConnectionOptions };
+export { mongoConnectionManager };
+export type { ConnectionOptions };
 
 // 导出类型定义（支持 TypeScript isolated modules）
 export type { ConnectionCache as ConnectionCacheType };
