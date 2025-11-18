@@ -8,14 +8,29 @@ This is a Next.js 16 application for a developer events platform called "DevEven
 
 ## Technology Stack
 
+### Core Framework & Runtime
 - **Framework**: Next.js 16 with App Router
 - **Runtime**: React 19.2.0
 - **Language**: TypeScript 5
-- **Styling**: Tailwind CSS 4 with custom CSS utilities
+- **Package Manager**: npm (with pnpm lockfile present)
+
+### UI & Styling
+- **Styling**: Tailwind CSS 4 with custom configuration
+- **CSS Utilities**: tw-animate-css for custom animations
+- **Icons**: Lucide React icon library
+- **Fonts**:
+  - Schibsted Grotesk (Google Fonts) - main display font
+  - Martian Mono (Google Fonts) - monospace font
+
+### Advanced Graphics & Effects
 - **WebGL**: OGL (Open Graphics Library) for custom light ray effects
-- **Icons**: Lucide React
-- **Fonts**: Schibsted Grotesk & Martian Mono from Google Fonts
-- **Utilities**: Class Variance Authority, Tailwind Merge, tw-animate-css
+- **Shaders**: Custom fragment shaders for ray rendering
+- **Animation**: RequestAnimationFrame loop for real-time rendering
+
+### Analytics & Database
+- **Analytics**: PostHog for user behavior tracking
+- **Database**: MongoDB (configured via Mongoose)
+- **Analytics Integration**: Client-side PostHog instrumentation
 
 ## Development Commands
 
@@ -32,6 +47,28 @@ npm start
 # Lint code
 npm run lint
 ```
+
+## PostHog Analytics Integration
+
+### Configuration
+- **Client-side**: `instrumentation-client.ts` - PostHog JS initialization with debug mode in development
+- **Server-side**: URL rewrites in `next.config.ts` for PostHog API endpoints
+- **Features**: Exception tracking, debug mode, custom API endpoints (`/ingest`)
+
+### Key Features
+- **Exception tracking** enabled for error monitoring
+- **Debug mode** active in development environment
+- **Custom API endpoints** for data ingestion and static assets
+- **Trailing slash support** for PostHog API requests
+
+## Database Integration
+
+### MongoDB Setup
+- **Connection String**: Configured via `MONGODB_URI` environment variable
+- **ODM**: Mongoose for data modeling and schema management
+- **Deployment**: MongoDB Atlas cluster-based deployment
+- **Connection Management**: Connection pooling with support for multiple databases
+- **Location**: `lib/mongodb.ts` - Database connection and model management
 
 ## Key Components Architecture
 
@@ -50,10 +87,11 @@ npm run lint
 - **Global CSS** (`app/globals.css`): Custom Tailwind config, utilities, and component styles
 
 ### Component Organization
-- **Event Management**: EventCard and event data structures
-- **Navigation**: Fixed navbar with glass-morphism effect
-- **UI Elements**: Custom buttons and layout utilities
+- **Event Management**: EventCard and event data structures in `lib/constants.ts`
+- **Navigation**: Fixed navbar with glass-morphism effect in `Navbar.tsx`
+- **UI Elements**: Custom buttons and layout utilities in `lib/utils.ts`
 - **Visual Effects**: Interactive WebGL backgrounds and styling
+- **Analytics Integration**: PostHog tracking setup in `instrumentation-client.ts`
 
 ## Configuration Details
 
@@ -111,10 +149,37 @@ npm run lint
 - **Styles** organized in globals.css with Tailwind classes
 - **Type definitions** inline or in component files
 
+## Environment Variables
+
+The application requires several environment variables for proper operation:
+
+### Database Configuration
+- `MONGODB_URI`: MongoDB connection string for database access
+
+### Analytics Configuration
+- `NEXT_PUBLIC_POSTHOG_KEY`: PostHog project API key (publicly accessible)
+- Optional: `NODE_ENV`: Set to "development" for debug features
+
+### Database Connection Management
+- **Connection String Format**: `mongodb://[username:password@]host[:port]/database`
+- **Atlas Deployment**: Use MongoDB Atlas connection string with cluster configuration
+- **Environment-based Configuration**: Different connection strings for development and production
+
 ## Performance Considerations
 
+### Client-Side Performance
 - **Intersection observer** for lazy loading WebGL effects
-- **WebGL cleanup** on component unmount
-- **Proper TypeScript typing** for better performance
+- **WebGL cleanup** on component unmount with proper lifecycle management
 - **Optimized images** with Next.js Image component
-- **Efficient re-renders** with proper React patterns
+- **Efficient re-renders** with proper React patterns and memoization
+
+### Analytics Performance
+- **PostHog batching** for event aggregation
+- **Debug mode** only in development to avoid performance impact in production
+- **Client-side instrumentation** with minimal overhead
+
+### Database Performance
+- **Connection pooling** with multiple database support
+- **Connection caching** to avoid repeated connection establishment
+- **Lazy loading** of database connections when needed
+- **Proper cleanup** of database connections on application shutdown
