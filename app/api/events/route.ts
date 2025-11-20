@@ -1,15 +1,14 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { Event } from '@/database/event.model';
-import { connect } from "http2";
 
 export async function POST(req: NextRequest) {
     try {
         await connectToDatabase();
-        const formData = await req.formData();
+        const formData = await req.json();
         let event ;
         try {
-            event = Object.fromEntries(formData.entries());
+            event = JSON.parse(JSON.stringify(formData));
         } catch {
             return NextResponse.json({message: 'Invalid form data'}, {status: 400});
         }
